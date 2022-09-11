@@ -10,7 +10,8 @@ add_library(${project_name}-lib
         src/AppComponent.hpp
         src/controller/APIController.cpp
         src/controller/APIController.hpp
-        src/dto/DTOs.hpp
+        src/dto/RequestDTOs.hpp
+        src/dto/StatusDto.hpp
 )
 
 ## link libs
