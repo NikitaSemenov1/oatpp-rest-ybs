@@ -22,15 +22,18 @@ public:
     : oatpp::web::server::api::ApiController(objectMapper)
   {}
 public:
-  
-  ENDPOINT("GET", "/", root) {
-    auto dto = MyDto::createShared();
-    dto->statusCode = 200;
-    dto->message = "Hello World!";
-    return createDtoResponse(Status::CODE_200, dto);
+
+  ENDPOINT("POST", "imports", post_imports) {
+      return createResponse(Status::CODE_200, "TODO");
   }
-  
-  // TODO Insert Your endpoints here !!!
+
+  ENDPOINT("GET", "nodes/{id}", get_node, PATH(String, id)) {
+      return createResponse(Status::CODE_200, "TODO");
+  }
+
+  ENDPOINT("DELETE", "nodes/{id}", delete_node, PATH(String, id)) {
+      return createResponse(Status::CODE_200, "TODO");
+  }
   
 };
 
