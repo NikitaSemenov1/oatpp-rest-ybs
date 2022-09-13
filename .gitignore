@@ -39,6 +39,4 @@ build/
 cmake-build-debug/
 */cmake-build-debug/
 
-# sqlite
-**/*.sqlite
-/.vs
+/resources/config.json
