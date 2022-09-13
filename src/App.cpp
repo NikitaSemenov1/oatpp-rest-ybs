@@ -1,14 +1,17 @@
-#include "./controller/APIController.hpp"
-#include "./AppComponent.hpp"
+#include "controller/APIController.hpp"
+#include "AppComponent.hpp"
+#include "DatabaseComponent.hpp"
 
 #include "oatpp/network/Server.hpp"
 
 #include <iostream>
 
-void run() {
+void run(const oatpp::base::CommandLineArguments& args) {
 
   /* Register Components in scope of run() method */
-  AppComponent components;
+  AppComponent component(args);
+  DatabaseComponent database_component;
+
 
   /* Get router component */
   OATPP_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, router);
@@ -40,7 +43,7 @@ int main(int argc, const char * argv[]) {
 
   oatpp::base::Environment::init();
 
-  run();
+  run(oatpp::base::CommandLineArguments(argc, argv));
   
   /* Print how much objects were created during app running, and what have left-probably leaked */
   /* Disable object counting for release builds using '-D OATPP_DISABLE_ENV_OBJECT_COUNTERS' flag for better performance */

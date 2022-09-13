@@ -1,11 +1,14 @@
 #ifndef MyController_hpp
 #define MyController_hpp
 
-#include "dto/DTOs.hpp"
-
 #include "oatpp/web/server/api/ApiController.hpp"
 #include "oatpp/core/macro/codegen.hpp"
 #include "oatpp/core/macro/component.hpp"
+#include "oatpp/core/Types.hpp"
+
+#include "dto/RequestDTOs.hpp"
+
+#include "service/SystemItemService.hpp"
 
 #include OATPP_CODEGEN_BEGIN(ApiController) //<-- Begin Codegen
 
@@ -13,7 +16,7 @@
  * Sample Api Controller.
  */
 class APIController : public oatpp::web::server::api::ApiController {
-public:
+ public:
   /**
    * Constructor with object mapper.
    * @param objectMapper - default object mapper used to serialize/deserialize DTOs.
@@ -21,18 +24,21 @@ public:
   APIController(OATPP_COMPONENT(std::shared_ptr<ObjectMapper>, objectMapper))
     : oatpp::web::server::api::ApiController(objectMapper)
   {}
-public:
+ private:
+  SystemItemService systemItemService;
+ public:
 
-  ENDPOINT("POST", "imports", post_imports) {
-      return createResponse(Status::CODE_200, "TODO");
+  ENDPOINT("POST", "imports", post_imports,
+           BODY_DTO(Object<SystemItemImportRequest>, systemItemImportRequest)) {
+    return createDtoResponse(Status::CODE_200, systemItemService.imports(systemItemImportRequest));
   }
 
   ENDPOINT("GET", "nodes/{id}", get_node, PATH(String, id)) {
-      return createResponse(Status::CODE_200, "TODO");
+      return createDtoResponse(Status::CODE_200, systemItemService.getById(id));
   }
 
   ENDPOINT("DELETE", "nodes/{id}", delete_node, PATH(String, id)) {
-      return createResponse(Status::CODE_200, "TODO");
+      return createDtoResponse(Status::CODE_200, systemItemService.deleteById(id));
   }
   
 };

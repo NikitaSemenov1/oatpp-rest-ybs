@@ -11,7 +11,6 @@ class StatusDto : public oatpp::DTO {
 
   DTO_INIT(StatusDto, DTO)
 
-  DTO_FIELD(String, status);
   DTO_FIELD(Int32, code);
   DTO_FIELD(String, message);
 
