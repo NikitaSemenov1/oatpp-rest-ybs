@@ -4,8 +4,6 @@
 #include "db/SystemItemDb.hpp"
 #include "dto/ConfigDto.hpp"
 
-#include "iostream"
-
 class DatabaseComponent {
  public:
 
