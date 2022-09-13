@@ -4,7 +4,7 @@ set(project_name oatpp-rest-ybs)
 
 project(${project_name})
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 add_library(${project_name}-lib
         src/AppComponent.hpp
@@ -15,7 +15,9 @@ add_library(${project_name}-lib
         src/dto/ConfigDto.hpp
         src/db/SystemItemDb.hpp
         src/DatabaseComponent.hpp
-        )
+        src/Serializers.hpp
+        src/ErrorHandler.hpp
+        src/ErrorHandler.cpp)
 
 ## link libs
 
@@ -42,7 +44,7 @@ add_definitions(
 
 add_executable(${project_name}-exe
         src/App.cpp
-        test/app/MyApiTestClient.hpp src/service/SystemItemService.cpp src/service/SystemItemService.hpp)
+        test/app/MyApiTestClient.hpp src/service/SystemItemService.cpp src/service/SystemItemService.hpp src/Serializers.hpp)
 target_link_libraries(${project_name}-exe ${project_name}-lib)
 add_dependencies(${project_name}-exe ${project_name}-lib)
 
@@ -58,7 +60,7 @@ target_link_libraries(${project_name}-test ${project_name}-lib)
 add_dependencies(${project_name}-test ${project_name}-lib)
 
 set_target_properties(${project_name}-lib ${project_name}-exe ${project_name}-test PROPERTIES
-        CXX_STANDARD 11
+        CXX_STANDARD 17
         CXX_EXTENSIONS OFF
         CXX_STANDARD_REQUIRED ON
 )

@@ -2,16 +2,13 @@
 #define AppComponent_hpp
 
 #include "oatpp/web/server/HttpConnectionHandler.hpp"
-
 #include "oatpp/network/tcp/server/ConnectionProvider.hpp"
-
 #include "oatpp/parser/json/mapping/ObjectMapper.hpp"
-
 #include "oatpp/core/macro/component.hpp"
-
 #include "oatpp/core/base/CommandLineArguments.hpp"
 
 #include "dto/ConfigDto.hpp"
+#include "ErrorHandler.hpp"
 
 /**
  *  Class which creates and holds Application components and registers components in oatpp::base::Environment
@@ -36,21 +33,26 @@ public:
   OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, httpRouter)([] {
     return oatpp::web::server::HttpRouter::createShared();
   }());
+
+  /**
+ *  Create ObjectMapper component to serialize/deserialize DTOs in Contoller's API
+ */
+  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, apiObjectMapper)([] {
+    return oatpp::parser::json::mapping::ObjectMapper::createShared();
+  }());
   
   /**
    *  Create ConnectionHandler component which uses Router component to route requests
    */
   OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ConnectionHandler>, serverConnectionHandler)([] {
     OATPP_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, router); // get Router component
-    return oatpp::web::server::HttpConnectionHandler::createShared(router);
+    OATPP_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, objectMapper); // get ObjectMapper component
+
+    auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
+    connectionHandler->setErrorHandler(std::make_shared<ErrorHandler>(objectMapper));
+    return connectionHandler;
   }());
-  
-  /**
-   *  Create ObjectMapper component to serialize/deserialize DTOs in Contoller's API
-   */
-  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, apiObjectMapper)([] {
-    return oatpp::parser::json::mapping::ObjectMapper::createShared();
-  }());
+
 
   OATPP_CREATE_COMPONENT(oatpp::Object<ConfigDto>, config)([this] {
 

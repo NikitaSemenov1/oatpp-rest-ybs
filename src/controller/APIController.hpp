@@ -37,7 +37,7 @@ class APIController : public oatpp::web::server::api::ApiController {
       return createDtoResponse(Status::CODE_200, systemItemService.getById(id));
   }
 
-  ENDPOINT("DELETE", "nodes/{id}", delete_node, PATH(String, id)) {
+  ENDPOINT("DELETE", "delete/{id}", delete_node, PATH(String, id)) {
       return createDtoResponse(Status::CODE_200, systemItemService.deleteById(id));
   }
   
