@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: "system_item"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8'
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d system_item" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+  app:
+    build: .
+    restart: always
+    ports:
+      - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
+    depends_on:
+      - postgres
+    environment:
+      CONFIG_PROFILE: dev

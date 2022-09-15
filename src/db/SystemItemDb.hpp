@@ -49,6 +49,7 @@
          " size=:systemItem.size "
          "WHERE "
          " id=:systemItem.id;",
+         PREPARE(true),
          PARAM(oatpp::Object<SystemItem>, systemItem))
 
    QUERY(updateFolder,
@@ -58,6 +59,7 @@
          " \"parentId\"=:systemItem.parentId "
          "WHERE "
          " id=:systemItem.id;",
+         PREPARE(true),
          PARAM(oatpp::Object<SystemItem>, systemItem))
 
    QUERY(deleteSystemItemById,

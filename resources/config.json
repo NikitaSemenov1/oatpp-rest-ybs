@@ -1,0 +1,7 @@
+{
+  "dev": {
+    "host": "host.docker.internal",
+    "port": 5432,
+    "dbConnectionString": "postgresql://postgres:postgres@host.docker.internal:5432/system_item"
+  }
+}

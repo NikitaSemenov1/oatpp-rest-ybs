@@ -1,5 +1,4 @@
-# oatpp-starter
-Starter project of oat++ (AKA oatpp) application. Based on oatpp Multithreaded (Simple) API.
+# Yandex backend school test project
 
 ## Overview
 
@@ -8,14 +7,19 @@ Starter project of oat++ (AKA oatpp) application. Based on oatpp Multithreaded (
 ```
 |- CMakeLists.txt                        // projects CMakeLists.txt
 |- src/
-|    |
+|    |- service/                         // business logic
 |    |- controller/                      // Folder containing MyController where all endpoints are declared
 |    |- dto/                             // DTOs are declared here
-|    |- AppComponent.hpp                 // Service config
+|    |- AppComponent.hpp                 // Service components
 |    |- App.cpp                          // main() is here
-|
-|- test/                                 // test folder
-|- utility/install-oatpp-modules.sh      // utility script to install required oatpp-modules.  
+|    |- DabaseComponent.hpp              // Database components
+|    |- ErrorHandler.hpp                 // Custom error handler. Responds json
+|    |- Serializers.hpp                  // DTO serializer
+|- sql/                                  // migrations
+|- utility/install-oatpp-modules.sh      // utility script to install required oatpp-modules.
+|- resources/config.json                 // configuration file with configuration profiles
+|- Dockerfile                            // Dockerfile
+|- docker-compose.yaml                   // Docker-compose with this service and postgresql 
 ```
 
 ---
@@ -34,16 +38,3 @@ $ mkdir build && cd build
 $ cmake ..
 $ make 
 $ ./oatpp-rest-ybs-exe  # - run application.
-
-```
-
-[//]: # (#### In Docker)
-
-[//]: # ()
-[//]: # (```)
-
-[//]: # ($ docker build -t oatpp-starter .)
-
-[//]: # ($ docker run -p 8000:8000 -t oatpp-starter)
-
-[//]: # (```)
