@@ -18,7 +18,8 @@ class SystemItemService {
 
   void add_subtree(oatpp::Object<SystemItem>& item, const oatpp::provider::ResourceHandle<oatpp::orm::Connection>& connection = nullptr);
 
-  void update_size(const oatpp::String& id, const oatpp::provider::ResourceHandle<oatpp::orm::Connection>& connection = nullptr);
+  void update_size_date(const oatpp::String& id, const oatpp::String& date, const oatpp::provider::ResourceHandle<oatpp::orm::Connection>& connection = nullptr);
+
  public:
   oatpp::Object<StatusDto> imports(const oatpp::Object<SystemItemImportRequest>&);
   oatpp::Object<StatusDto> deleteById(const oatpp::String& id);

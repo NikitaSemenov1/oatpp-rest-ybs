@@ -76,22 +76,15 @@
          "SELECT size FROM SystemItem WHERE \"parentId\"=:id;",
          PARAM(oatpp::String, id))
 
-   QUERY(updateSize,
+   QUERY(updateSizeDate,
          "UPDATE SystemItem "
          "SET "
-         " size=:size "
+         " size=:size, "
+         " date=CAST(:date AS TIMESTAMP) "
          "WHERE "
          " id=:id",
          PARAM(oatpp::String, id),
-         PARAM(oatpp::Int64, size))
-
-   QUERY(updateDate,
-         "UPDATE SystemItem "
-         "SET "
-         " date=:date "
-         "WHERE "
-         " id=:id",
-         PARAM(oatpp::String, id),
+         PARAM(oatpp::Int64, size),
          PARAM(oatpp::String, date))
  };
  }

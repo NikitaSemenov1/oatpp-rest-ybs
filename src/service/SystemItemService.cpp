@@ -20,7 +20,7 @@ oatpp::Object<StatusDto> SystemItemService::imports(const oatpp::Object<SystemIt
       if (systemItem->type == Type::FILE) {
         auto dbResponse = systemItemDb->udpateFile(systemItem);
         DB_ASSERT(dbResponse)
-        update_size(systemItem->parentId);
+        update_size_date(systemItem->parentId, systemItem->updateDate);
       } else {
         auto dbResponse = systemItemDb->updateFolder(systemItem);
         DB_ASSERT(dbResponse)
@@ -48,7 +48,7 @@ oatpp::Object<StatusDto> SystemItemService::deleteById(const oatpp::String& id) 
 
   OATPP_LOGD("SystemItem", "DELETED System Item %s", id->c_str())
 
-  update_size(parentId);
+//  update_size_date(parentId, );
 
   return get_status(200);
 }
@@ -86,7 +86,9 @@ void SystemItemService::add_subtree(oatpp::Object<SystemItem> &item, const oatpp
     add_subtree(child, connection);
   }
 }
-void SystemItemService::update_size(const oatpp::String& id, const oatpp::provider::ResourceHandle<oatpp::orm::Connection>& connection) {
+void SystemItemService::update_size_date(const oatpp::String &id,
+                                         const oatpp::String &date,
+                                         const oatpp::provider::ResourceHandle<oatpp::orm::Connection> &connection) {
   if (id == nullptr) return;  // if root is reached
   oatpp::Int64 new_size = std::make_shared<v_int64>(0);
   auto dbResponse = systemItemDb->getChildreSize(id, connection);
@@ -98,8 +100,8 @@ void SystemItemService::update_size(const oatpp::String& id, const oatpp::provid
   for (auto& child : *children) {
     new_size = new_size + child->size;
   }
-  dbResponse = systemItemDb->updateSize(id, new_size, connection);
+  dbResponse = systemItemDb->updateSizeDate(id, new_size, date, connection);
   DB_ASSERT(dbResponse)
   auto item = getById(id);
-  update_size(item->parentId, connection);
+  update_size_date(item->parentId, date, connection);
 }
