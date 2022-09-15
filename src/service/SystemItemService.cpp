@@ -68,6 +68,8 @@ bool SystemItemService::systemItemExists(const oatpp::String& id) {
   return dbResponse->hasMoreToFetch();
 }
 void SystemItemService::add_subtree(oatpp::Object<SystemItem> &item, const oatpp::provider::ResourceHandle<oatpp::orm::Connection>& connection) {
+  if (item->type == Type::FILE) return;  // leave children null if it's file
+
   auto dbResponse = systemItemDb->getChildren(item->id, connection);
 
   OATPP_ASSERT_HTTP(dbResponse->isSuccess(), Status ::CODE_500, dbResponse->getErrorMessage())
