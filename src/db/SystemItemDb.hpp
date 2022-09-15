@@ -46,8 +46,7 @@
          " url=:systemItem.url, "
          " date=CAST( :systemItem.date AS TIMESTAMP), "
          " \"parentId\"=:systemItem.parentId, "
-         " type=:systemItem.type, "
-         " size=:systemItem.size "
+         " type=:systemItem.type "
          "WHERE "
          " id=:systemItem.id;",
          PREPARE(true),

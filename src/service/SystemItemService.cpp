@@ -16,6 +16,10 @@ oatpp::Object<StatusDto> SystemItemService::imports(const oatpp::Object<SystemIt
   for (auto &systemItem : *systemItemImportRequest->items) {
     systemItem->updateDate = systemItemImportRequest->updateDate;
 
+    if (systemItem->type == Type::FOLDER) {
+      systemItem->size = std::make_shared<v_int64>(0);
+    }
+
     if (systemItemExists(systemItem->id)) {
       auto dbResponse = systemItemDb->udpateSystemItem(systemItem);
 
@@ -38,11 +42,15 @@ oatpp::Object<StatusDto> SystemItemService::imports(const oatpp::Object<SystemIt
 oatpp::Object<StatusDto> SystemItemService::deleteById(const oatpp::String& id) {
   OATPP_ASSERT_HTTP(systemItemExists(id), Status::CODE_404, "System Item not found")
 
+  auto parentId = getById(id)->parentId;
+
   auto dbResponse = systemItemDb->deleteSystemItemById(id);
 
   DB_ASSERT(dbResponse)
 
   OATPP_LOGD("SystemItem", "DELETED System Item %s", id->c_str())
+
+  update_size(parentId);
 
   return get_status(200);
 }
