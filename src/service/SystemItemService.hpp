@@ -14,11 +14,15 @@ class SystemItemService {
 
   OATPP_COMPONENT(std::shared_ptr<db::SystemItemDb>, systemItemDb);
 
-  bool systemItemExists(oatpp::String id);
+  bool systemItemExists(const oatpp::String& id);
+
+  void add_subtree(oatpp::Object<SystemItem>& item, const oatpp::provider::ResourceHandle<oatpp::orm::Connection>& connection = nullptr);
+
+  void update_size(const oatpp::String& id, const oatpp::provider::ResourceHandle<oatpp::orm::Connection>& connection = nullptr);
  public:
   oatpp::Object<StatusDto> imports(const oatpp::Object<SystemItemImportRequest>&);
   oatpp::Object<StatusDto> deleteById(const oatpp::String& id);
-  oatpp::Object<StatusDto> getById(const oatpp::String& id);
+  oatpp::Object<SystemItem> getById(const oatpp::String& id);
 };
 
 #endif //OATPP_REST_YBS_SRC_SERVICE_SYSTEMITEMSERVICE_HPP_
