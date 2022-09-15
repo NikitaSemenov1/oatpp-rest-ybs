@@ -32,19 +32,19 @@
    QUERY(createSystemItem,
          "INSERT INTO SystemItem"
          "(id, url, date, \"parentId\", type, size) VALUES "
-         "(:systemItem.id , :systemItem.url, CAST( :systemItem.date AS TIMESTAMP WITH TIME ZONE), :systemItem.parentId, :systemItem.type, :systemItem.size);",
+         "(:systemItem.id , :systemItem.url, CAST( :systemItem.date AS TIMESTAMP), :systemItem.parentId, :systemItem.type, :systemItem.size);",
          PREPARE(true),
          PARAM(oatpp::Object<SystemItem>, systemItem))
 
    QUERY(getSystemItemById,
-         "SELECT id, url, CAST(date as varchar(255)), \"parentId\", type, size FROM SystemItem WHERE id=:id;",
+         "SELECT id, url, to_char(date, 'YYYY-MM-DDT') || to_char(date,'HH24:MI:SSZ') as date, \"parentId\", type, size FROM SystemItem WHERE id=:id;",
          PARAM(oatpp::String, id))
 
    QUERY(udpateSystemItem,
          "UPDATE SystemItem "
          "SET "
          " url=:systemItem.url, "
-         " date=CAST( :systemItem.date AS TIMESTAMP WITH TIME ZONE), "
+         " date=CAST( :systemItem.date AS TIMESTAMP), "
          " \"parentId\"=:systemItem.parentId, "
          " type=:systemItem.type, "
          " size=:systemItem.size "
@@ -62,7 +62,7 @@
          PARAM(oatpp::String, id))
 
    QUERY(getChildren,
-         "SELECT id, url, CAST(date as varchar(255)), \"parentId\", type, size FROM SystemItem WHERE \"parentId\"=:id;",
+         "SELECT id, url, to_char(date, 'YYYY-MM-DDT') || to_char(date,'HH24:MI:SSZ') as date, \"parentId\", type, size FROM SystemItem WHERE \"parentId\"=:id;",
          PARAM(oatpp::String, id))
 
    QUERY(getChildreSize,

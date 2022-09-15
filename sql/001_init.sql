@@ -1,7 +1,7 @@
 CREATE TABLE "systemitem" (
     "id" varchar(255) NOT NULL PRIMARY KEY,
     "url" varchar(255) NULL,
-    "date" timestamp with time zone NOT NULL,
+    "date" timestamp NOT NULL,
     "type" varchar(6) NOT NULL,
     "size" bigint NULL,
     "parentId" varchar(255) NULL);
