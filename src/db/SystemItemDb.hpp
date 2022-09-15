@@ -4,6 +4,7 @@
 
 #include "dto/RequestDTOs.hpp"
 #include "oatpp-postgresql/orm.hpp"
+#include "oatpp/core/Types.hpp"
 
 #include OATPP_CODEGEN_BEGIN(DbClient) //<- Begin Codegen
 
@@ -17,6 +18,8 @@
    SystemItemDb(const std::shared_ptr<oatpp::orm::Executor> &executor)
        : oatpp::orm::DbClient(executor) {
 
+     setEnabledInterpretations({"protobuf"});
+
      oatpp::orm::SchemaMigration migration(executor);
      migration.addFile(1 /* start fr  om version 1 */, DATABASE_MIGRATIONS "/001_init.sql");
 
@@ -28,25 +31,26 @@
 
    QUERY(createSystemItem,
          "INSERT INTO SystemItem"
-         "(id, url, date, parent_id, type, size) VALUES "
-         "(:systemItem.id , :systemItem.url, CAST( :systemItem.updateDate AS TIMESTAMP WITH TIME ZONE), :systemItem.parentId, :systemItem.type, :systemItem.size);",
+         "(id, url, date, \"parentId\", type, size) VALUES "
+         "(:systemItem.id , :systemItem.url, CAST( :systemItem.date AS TIMESTAMP WITH TIME ZONE), :systemItem.parentId, :systemItem.type, :systemItem.size);",
          PREPARE(true),
          PARAM(oatpp::Object<SystemItem>, systemItem))
 
    QUERY(getSystemItemById,
-         "SELECT * FROM SystemItem WHERE id=:id;",
+         "SELECT id, url, CAST(date as varchar(255)), \"parentId\", type, size FROM SystemItem WHERE id=:id;",
          PARAM(oatpp::String, id))
 
    QUERY(udpateSystemItem,
          "UPDATE SystemItem "
          "SET "
          " url=:systemItem.url, "
-         " date=CAST( :systemItem.updateDate AS TIMESTAMP WITH TIME ZONE), "
-         " parent_id=:systemItem.parentId, "
+         " date=CAST( :systemItem.date AS TIMESTAMP WITH TIME ZONE), "
+         " \"parentId\"=:systemItem.parentId, "
          " type=:systemItem.type, "
          " size=:systemItem.size "
          "WHERE "
          " id=:systemItem.id;",
+         PREPARE(true),
          PARAM(oatpp::Object<SystemItem>, systemItem))
 
    QUERY(deleteSystemItemById,
@@ -55,6 +59,23 @@
 
    QUERY(getId,
          "SELECT id FROM SystemItem WHERE id=:id;",
+         PARAM(oatpp::String, id))
+
+   QUERY(getChildren,
+         "SELECT id, url, CAST(date as varchar(255)), \"parentId\", type, size FROM SystemItem WHERE \"parentId\"=:id;",
+         PARAM(oatpp::String, id))
+
+   QUERY(getChildreSize,
+         "SELECT size FROM SystemItem WHERE \"parentId\"=:id;",
+         PARAM(oatpp::String, id))
+
+   QUERY(updateSize,
+         "UPDATE SystemItem "
+         "SET "
+         " size=:size "
+         "WHERE "
+         " id=:id",
+         PARAM(oatpp::Int64, size),
          PARAM(oatpp::String, id))
  };
  }
