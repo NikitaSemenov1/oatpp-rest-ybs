@@ -91,7 +91,7 @@ void SystemItemService::add_subtree(oatpp::Object<SystemItem> &item, const oatpp
 void SystemItemService::update_size(const oatpp::String& id, const oatpp::provider::ResourceHandle<oatpp::orm::Connection>& connection) {
   if (id == nullptr) return;  // if root is reached
   oatpp::Int64 new_size = std::make_shared<v_int64>(0);
-  auto dbResponse = systemItemDb->getChildreSize(id);
+  auto dbResponse = systemItemDb->getChildreSize(id, connection);
 
   DB_ASSERT(dbResponse)
 
@@ -103,5 +103,5 @@ void SystemItemService::update_size(const oatpp::String& id, const oatpp::provid
   dbResponse = systemItemDb->updateSize(new_size, id, connection);
   DB_ASSERT(dbResponse)
   auto item = getById(id);
-  update_size(item->parentId);
+  update_size(item->parentId, connection);
 }

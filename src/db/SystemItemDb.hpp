@@ -76,6 +76,15 @@
          " id=:id",
          PARAM(oatpp::Int64, size),
          PARAM(oatpp::String, id))
+
+   QUERY(updateDate,
+         "UPDATE SystemItem "
+         "SET "
+         " date=:date "
+         "WHERE "
+         " id=:id",
+         PARAM(oatpp::String, date),
+         PARAM(oatpp::String, id))
  };
  }
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen
