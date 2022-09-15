@@ -16,30 +16,25 @@ ENUM(Type, v_uint8,
      VALUE(FOLDER, 1, "FOLDER")
 )
 
-class SystemItemImport : public oatpp::DTO {
+class SystemItem : public oatpp::DTO {
 
-    DTO_INIT(SystemItemImport, DTO)
+    DTO_INIT(SystemItem, DTO)
 
     DTO_FIELD(String, id, "id");
     DTO_FIELD(String, url, "url");
-    DTO_FIELD(UInt64, date, "date");
-    DTO_FIELD(String, parentId, "ParentId");
+    DTO_FIELD(String, parentId, "parentId");
     DTO_FIELD(Enum<Type>::AsString, type, "type");
-    DTO_FIELD(UInt64, size, "size");
-};
+    DTO_FIELD(Int64, size, "size");
+    DTO_FIELD(String, updateDate, "date");
 
-class SystemItem : public SystemItemImport {
-
-  DTO_INIT(SystemItem, DTO)
-
-  DTO_FIELD(UnorderedSet<Object<SystemItem>>, children, "children");
+    DTO_FIELD(Vector<Object<SystemItem>>, children, "children");
 };
 
 class SystemItemImportRequest : public oatpp::DTO {
 
     DTO_INIT(SystemItemImportRequest, DTO)
 
-    DTO_FIELD(Vector<Object<SystemItemImport>>, items, "items");
+    DTO_FIELD(Vector<Object<SystemItem>>, items, "items");
     DTO_FIELD(String, updateDate, "updateDate");
 };
 
