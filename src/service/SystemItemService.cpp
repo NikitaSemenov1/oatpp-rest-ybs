@@ -20,7 +20,6 @@ oatpp::Object<StatusDto> SystemItemService::imports(const oatpp::Object<SystemIt
       if (systemItem->type == Type::FILE) {
         auto dbResponse = systemItemDb->udpateFile(systemItem);
         DB_ASSERT(dbResponse)
-        update_size_date(systemItem->parentId, systemItem->updateDate);
       } else {
         auto dbResponse = systemItemDb->updateFolder(systemItem);
         DB_ASSERT(dbResponse)
@@ -28,11 +27,16 @@ oatpp::Object<StatusDto> SystemItemService::imports(const oatpp::Object<SystemIt
 
       OATPP_LOGD("SystemItem", "UPDATED System Item %s", systemItem->id->c_str())
     } else {
+      if (systemItem->type == Type::FOLDER) {
+        systemItem->size = std::make_shared<v_int64>(0);
+      }
+
       auto dbResponse = systemItemDb->createSystemItem(systemItem);
       DB_ASSERT(dbResponse)
 
       OATPP_LOGD("SystemItem", "CREATED System Item %s", systemItem->id->c_str())
     }
+    update_size_date(systemItem->parentId, systemItem->updateDate);
   }
   return get_status(200, "OK");
 }
