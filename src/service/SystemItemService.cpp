@@ -16,14 +16,15 @@ oatpp::Object<StatusDto> SystemItemService::imports(const oatpp::Object<SystemIt
   for (auto &systemItem : *systemItemImportRequest->items) {
     systemItem->updateDate = systemItemImportRequest->updateDate;
 
-    if (systemItem->type == Type::FOLDER) {
-      systemItem->size = std::make_shared<v_int64>(0);
-    }
-
     if (systemItemExists(systemItem->id)) {
-      auto dbResponse = systemItemDb->udpateSystemItem(systemItem);
-
-      DB_ASSERT(dbResponse)
+      if (systemItem->type == Type::FILE) {
+        auto dbResponse = systemItemDb->udpateFile(systemItem);
+        DB_ASSERT(dbResponse)
+        update_size(systemItem->parentId);
+      } else {
+        auto dbResponse = systemItemDb->updateFolder(systemItem);
+        DB_ASSERT(dbResponse)
+      }
 
       OATPP_LOGD("SystemItem", "UPDATED System Item %s", systemItem->id->c_str())
     } else {
@@ -31,9 +32,6 @@ oatpp::Object<StatusDto> SystemItemService::imports(const oatpp::Object<SystemIt
       DB_ASSERT(dbResponse)
 
       OATPP_LOGD("SystemItem", "CREATED System Item %s", systemItem->id->c_str())
-    }
-    if (systemItem->type == Type::FILE) {
-      update_size(systemItem->parentId);
     }
   }
   return get_status(200, "OK");
@@ -100,7 +98,7 @@ void SystemItemService::update_size(const oatpp::String& id, const oatpp::provid
   for (auto& child : *children) {
     new_size = new_size + child->size;
   }
-  dbResponse = systemItemDb->updateSize(new_size, id, connection);
+  dbResponse = systemItemDb->updateSize(id, new_size, connection);
   DB_ASSERT(dbResponse)
   auto item = getById(id);
   update_size(item->parentId, connection);

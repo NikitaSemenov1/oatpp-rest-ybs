@@ -40,16 +40,24 @@
          "SELECT id, url, to_char(date, 'YYYY-MM-DDT') || to_char(date,'HH24:MI:SSZ') as date, \"parentId\", type, size FROM SystemItem WHERE id=:id;",
          PARAM(oatpp::String, id))
 
-   QUERY(udpateSystemItem,
+   QUERY(udpateFile,
          "UPDATE SystemItem "
          "SET "
          " url=:systemItem.url, "
          " date=CAST( :systemItem.date AS TIMESTAMP), "
          " \"parentId\"=:systemItem.parentId, "
-         " type=:systemItem.type "
+         " size=:systemItem.size "
          "WHERE "
          " id=:systemItem.id;",
-         PREPARE(true),
+         PARAM(oatpp::Object<SystemItem>, systemItem))
+
+   QUERY(updateFolder,
+         "UPDATE SystemItem "
+         "SET "
+         " date=CAST( :systemItem.date AS TIMESTAMP), "
+         " \"parentId\"=:systemItem.parentId "
+         "WHERE "
+         " id=:systemItem.id;",
          PARAM(oatpp::Object<SystemItem>, systemItem))
 
    QUERY(deleteSystemItemById,
@@ -74,8 +82,8 @@
          " size=:size "
          "WHERE "
          " id=:id",
-         PARAM(oatpp::Int64, size),
-         PARAM(oatpp::String, id))
+         PARAM(oatpp::String, id),
+         PARAM(oatpp::Int64, size))
 
    QUERY(updateDate,
          "UPDATE SystemItem "
@@ -83,8 +91,8 @@
          " date=:date "
          "WHERE "
          " id=:id",
-         PARAM(oatpp::String, date),
-         PARAM(oatpp::String, id))
+         PARAM(oatpp::String, id),
+         PARAM(oatpp::String, date))
  };
  }
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen
