@@ -22,7 +22,7 @@ class SystemItemService {
 
  public:
   oatpp::Object<StatusDto> imports(const oatpp::Object<SystemItemImportRequest>&);
-  oatpp::Object<StatusDto> deleteById(const oatpp::String& id);
+  oatpp::Object<StatusDto> deleteById(const oatpp::String& id, const oatpp::String& date);
   oatpp::Object<SystemItem> getById(const oatpp::String& id);
 };
 

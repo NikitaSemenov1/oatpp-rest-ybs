@@ -41,7 +41,7 @@ oatpp::Object<StatusDto> SystemItemService::imports(const oatpp::Object<SystemIt
   return get_status(200, "OK");
 }
 
-oatpp::Object<StatusDto> SystemItemService::deleteById(const oatpp::String& id) {
+oatpp::Object<StatusDto> SystemItemService::deleteById(const oatpp::String& id, const oatpp::String& date) {
   OATPP_ASSERT_HTTP(systemItemExists(id), Status::CODE_404, "System Item not found")
 
   auto parentId = getById(id)->parentId;
@@ -52,7 +52,7 @@ oatpp::Object<StatusDto> SystemItemService::deleteById(const oatpp::String& id) 
 
   OATPP_LOGD("SystemItem", "DELETED System Item %s", id->c_str())
 
-//  update_size_date(parentId, );
+  update_size_date(parentId, date);
 
   return get_status(200);
 }
