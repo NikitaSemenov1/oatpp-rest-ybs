@@ -28,12 +28,32 @@ void run(const oatpp::base::CommandLineArguments& args) {
   /* Create server which takes provided TCP connections and passes them to HTTP connection handler */
   oatpp::network::Server server(connectionProvider, connectionHandler);
 
+  std::thread oatppThread([&server] {
+    /* Run server */
+    server.run();
+  });
+
   /* Print info about server port */
   OATPP_LOGI("MyApp", "Server running on port %s", connectionProvider->getProperty("port").getData());
 
-  /* Run server */
-  server.run();
-  
+  std::string command;
+  while (std::cin >> command) {
+    if (command == "stop") {
+        connectionProvider->stop();
+
+        if (server.getStatus() == oatpp::network::Server::STATUS_RUNNING) {
+          server.stop();
+        }
+
+        connectionHandler->stop();
+
+        if(oatppThread.joinable()) {
+          oatppThread.join();
+        }
+        break;
+    }
+    std::cerr << "Invalid command" << std::endl;
+  }
 }
 
 /**
